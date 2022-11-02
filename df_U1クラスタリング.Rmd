@@ -1,0 +1,22 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+df_U1<-read.csv("/Users/kiyopippi/Desktop/卒業研究/データ/df_U1.csv")
+#label1<-df1[,"label"] #ラベルを抽出
+df_U1<-df_U1[,colnames(df_U1) != "X"] #インデックスを取り除く
+df_U1[is.na(df_U1)] <- 0 #null埋め
+#df1<-df1[,colnames(df1) != "label"] #ラベルを取り除く
+df_U1
+```
+```{r}
+df_V1<-read.csv("/Users/kiyopippi/Desktop/卒業研究/データ/df_V1.csv")
+#label1<-df1[,"label"] #ラベルを抽出
+df_V1<-df_V1[,colnames(df_V1) != "X"] #インデックスを取り除く
+df_V1[is.na(df_V1)] <- 0 #null埋め
+#df1<-df1[,colnames(df1) != "label"] #ラベルを取り除く
+df_V1
+```
+

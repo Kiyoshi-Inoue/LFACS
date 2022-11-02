@@ -1,0 +1,59 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+df_V1<-read.csv("/Users/kiyopippi/Desktop/卒業研究/データ/df_V1.csv")
+#label1<-df1[,"label"] #ラベルを抽出
+df_V1<-df_V1[,colnames(df_V1) != "X"] #インデックスを取り除く
+df_V1[is.na(df_V1)] <- 0 #null埋め
+#df1<-df1[,colnames(df1) != "label"] #ラベルを取り除く
+df_V1
+```
+```{r}
+library(densityClust)
+df_V1_dist<-dist(df_V1)
+df_V1_clust<-densityClust(df_V1_dist,gaussian=TRUE)
+plot(df_V1_clust)
+plotDensityClust(df_V1_clust,type="all")
+```
+```{r}
+df_V1_clust<-findClusters(df_V1_clust,rho=3,delta=5)
+plotDensityClust(df_V1_clust)
+```
+```{r}
+split(df_V1,df_V1_clust$clusters)
+```
+```{r}
+df_V1_clust_result<-split(df_V1,df_V1_clust$clusters)
+df_V1_clust_result_1<-df_V1_clust_result$"1"
+df_V1_clust_result_2<-df_V1_clust_result$"2"
+# df1_clust_result_3<-df1_clust_result$"3"
+df_V1_clust_result_1[,"label"]<-0
+df_V1_clust_result_2[,"label"]<-1
+# df1_clust_result_3[,"label"]<-2
+df_V1_clust_final<-rbind(df_V1_clust_result_1,df_V1_clust_result_2)
+```
+
+```{r}
+index<-as.integer(rownames(df_V1_clust_final))#インデックスをint型に変換
+df_V1_clust_final$index<-index
+```
+
+```{r}
+df_V1_clust_final<-dplyr::select(df_V1_clust_final,index,everything())
+df_V1_clust_final<-df_V1_clust_final[order(df_V1_clust_final$index),]
+df_V1_clust_final
+```
+```{r}
+clust_label<-df_V1_clust_final[,"label"] #クラスタリングで出たラベルを格納
+#df1[,"label"]<-label1
+df_V1[,"clust_label"]<-clust_label
+df_V1
+```
+
+```{r}
+write.csv(df_V1, file ="/Users/kiyopippi/Desktop/卒業研究/データ/df_V1_clustering_result.csv")
+```
+
